@@ -38,7 +38,7 @@ public class Searcher {
         QueryParser  parser = new QueryParser("name", new StandardAnalyzer());
         Query query = parser.parse(q);
 
-        TopDocs hits = is.search(query, 800);
+        TopDocs hits = is.search(query, 900000);
         ArrayList<Document> endlist = new ArrayList<>();
 
         for (ScoreDoc scoreDoc: hits.scoreDocs) {

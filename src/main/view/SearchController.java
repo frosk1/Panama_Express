@@ -58,6 +58,19 @@ public class SearchController {
     @FXML
     private TableColumn<NodeEntity, String> node2_column;
 
+    @FXML
+    private TableView<NodeEntity> passiv_connectiontable;
+
+    @FXML
+    private TableColumn<NodeEntity, String> passiv_node1_column;
+
+    @FXML
+    private TableColumn<NodeEntity, String> passiv_relation_column;
+
+    @FXML
+    private TableColumn<NodeEntity, String> passiv_node2_column;
+
+
 
     @FXML
     private Label abstract_name_label;
@@ -77,6 +90,9 @@ public class SearchController {
     private Label intermediaries_count_label;
     @FXML
     private Label addresses_count_label;
+
+    @FXML
+    private Label connection_count;
 
 
     private MainApp mainApp;
@@ -113,18 +129,34 @@ public class SearchController {
         abstract_column.setCellValueFactory(cellData -> cellData.getValue().abstract_nameProperty());
         type_column.setCellValueFactory(cellData -> cellData.getValue().typeProperty());
 
-        node1_column.setCellValueFactory(cellData -> cellData.getValue().node1Property());
+        node1_column.setCellValueFactory(cellData -> cellData.getValue().node1_nameProperty());
         relation_column.setCellValueFactory(cellData -> cellData.getValue().relationProperty());
-        node2_column.setCellValueFactory(cellData -> cellData.getValue().node2Property());
+        node2_column.setCellValueFactory(cellData -> cellData.getValue().node2_nameProperty());
+
+        passiv_node1_column.setCellValueFactory(cellData -> cellData.getValue().node1_nameProperty());
+        passiv_relation_column.setCellValueFactory(cellData -> cellData.getValue().relationProperty());
+        passiv_node2_column.setCellValueFactory(cellData -> cellData.getValue().node2_nameProperty());
+
 
         showNodeCount();
 
         showNodeDetails(null);
+
         entitytable.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldvalue, newvalue) -> showNodeDetails(newvalue));
 
         entitytable.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldvalue, newvalue) -> showNodeConnections(newvalue));
+
+        entitytable.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldvalue, newvalue) -> showPassivNodeConnections(newvalue));
+
+        connectiontable.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldvalue, newvalue) -> showNextNode(newvalue));
+
+        passiv_connectiontable.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldvalue, newvalue) -> showPassivNextNode(newvalue));
+
 
     }
 
@@ -146,6 +178,7 @@ public class SearchController {
         Searcher searcher = new Searcher();
         try {
             ArrayList<Document> results = searcher.search(index_dir,queryfield.getText());
+            this.initnodecount();
             entitytable.setItems(this.fill_observable(results));
             this.showNodeCount();
 
@@ -316,6 +349,39 @@ public class SearchController {
 
     }
 
+    private void showNextNode(NodeEntity node) {
+        if (node != null) {
+            String index_dir = "/home/jan/Development/panama_search/index_files";
+            Searcher searcher = new Searcher();
+            try {
+                ObservableList<NodeEntity> oblist = FXCollections.observableArrayList();
+                ArrayList<Document> connectednode = searcher.search(index_dir, "node_id:" + node.getNode2());
+                entitytable.setItems(this.fill_observable(connectednode));
+
+            } catch (IOException | ParseException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    private void showPassivNextNode(NodeEntity node) {
+        if (node != null) {
+            String index_dir = "/home/jan/Development/panama_search/index_files";
+            Searcher searcher = new Searcher();
+            try {
+                ObservableList<NodeEntity> oblist = FXCollections.observableArrayList();
+                ArrayList<Document> connectednode = searcher.search(index_dir, "node_id:" + node.getNode1());
+                entitytable.setItems(this.fill_observable(connectednode));
+
+            } catch (IOException | ParseException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+
     private void showNodeConnections(NodeEntity node) {
         if(node != null){
             String index_dir = "/home/jan/Development/panama_search/index_files";
@@ -324,27 +390,19 @@ public class SearchController {
 
                 ObservableList<NodeEntity> oblist = FXCollections.observableArrayList();
                 ArrayList<Document> relations = searcher.search(index_dir, "type:relation_node AND node1:" + node.getNode_id());
-                String node1_search_pattern = "node_id:";
-                System.out.println(relations.size());
+//                System.out.println(relations.size());
+                this.connection_count.setText(String.valueOf(relations.size()));
                 if (relations.size() > 0) {
 //                    int count = 1;
                     for (Document doc : relations) {
                         ArrayList<Document> results = searcher.search(index_dir, "node_id:" + doc.getField("node2").stringValue());
-                        NodeEntity newNode = new NodeEntity(doc.getField("relation").stringValue(), node.getAbstract_name(),
-                                results.get(0).getField("name").stringValue());
+                        NodeEntity newNode = new NodeEntity();
+                        newNode.setRelation(doc.getField("relation").stringValue());
+                        newNode.setNode1_name(node.getAbstract_name());
+                        newNode.setNode2_name(results.get(0).getField("name").stringValue());
+                        newNode.setNode2(doc.getField("node2").stringValue());
                         oblist.add(newNode);
                     }
-
-//                        if ( count==relations.size()) {
-//                            node1_search_pattern += doc.getField("node2").stringValue();
-//                        } else  {
-//                            node1_search_pattern += doc.getField("node2").stringValue()+ " OR node_id:";
-//                        }
-//                        count += 1;
-//
-//                    }
-//                }
-//                System.out.println(node1_search_pattern);
 
                     connectiontable.setItems(oblist);
                 }
@@ -363,6 +421,49 @@ public class SearchController {
 
             ObservableList<NodeEntity> oblist = FXCollections.observableArrayList();
             connectiontable.setItems(oblist);
+
+        }
+    }
+
+    private void showPassivNodeConnections(NodeEntity node) {
+        if(node != null){
+            String index_dir = "/home/jan/Development/panama_search/index_files";
+            Searcher searcher = new Searcher();
+            try {
+
+                ObservableList<NodeEntity> oblist = FXCollections.observableArrayList();
+                ArrayList<Document> relations = searcher.search(index_dir, "type:relation_node AND node2:" + node.getNode_id());
+//                System.out.println(relations.size());
+//                this.connection_count.setText(String.valueOf(relations.size()));
+                if (relations.size() > 0) {
+//                    int count = 1;
+                    for (Document doc : relations) {
+                        ArrayList<Document> results = searcher.search(index_dir, "node_id:" + doc.getField("node1").stringValue());
+                        NodeEntity newNode = new NodeEntity();
+                        newNode.setRelation(doc.getField("relation").stringValue());
+                        newNode.setNode2_name(node.getAbstract_name());
+                        newNode.setNode1_name(results.get(0).getField("name").stringValue());
+                        newNode.setNode1(doc.getField("node1").stringValue());
+                        oblist.add(newNode);
+                    }
+
+                    passiv_connectiontable.setItems(oblist);
+                }
+                else if (relations.size()==0){
+                    ObservableList<NodeEntity> oblist_empty = FXCollections.observableArrayList();
+                    passiv_connectiontable.setItems(oblist_empty);
+
+                }
+            }
+
+            catch(IOException | ParseException e){
+                e.printStackTrace();
+            }
+        }
+        else    {
+
+            ObservableList<NodeEntity> oblist = FXCollections.observableArrayList();
+            passiv_connectiontable.setItems(oblist);
 
         }
     }
