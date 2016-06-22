@@ -55,8 +55,9 @@
       <Label layoutX="607.0" layoutY="361.0" prefHeight="15.0" prefWidth="140.0" text="connection table" />
       <TableView fx:id="connectiontable" layoutX="600.0" layoutY="383.0" prefHeight="193.0" prefWidth="588.0">
         <columns>
-          <TableColumn fx:id="connection_abstract_column" prefWidth="467.0" text="abstract" />
-          <TableColumn fx:id="connection_type_column" prefWidth="120.0" text="type" />
+          <TableColumn fx:id="node1_column" prefWidth="146.0" text="node1" />
+          <TableColumn fx:id="relation_column" prefWidth="288.0" text="relation" />
+            <TableColumn fx:id="node2_column" prefWidth="228.0" text="node2" />
         </columns>
       </TableView>
    </children>

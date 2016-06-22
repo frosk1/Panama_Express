@@ -40,7 +40,44 @@ public class NodeEntity {
         this.node2.setValue(node2);
     }
 
+    public String getRelation() {
+        return relation.get();
+    }
+
+    public StringProperty relationProperty() {
+        return relation;
+    }
+
+    public void setRelation(String relation) {
+        this.relation.set(relation);
+    }
+
+    public String getNode1() {
+        return node1.get();
+    }
+
+    public StringProperty node1Property() {
+        return node1;
+    }
+
+    public void setNode1(String node1) {
+        this.node1.set(node1);
+    }
+
+    public String getNode2() {
+        return node2.get();
+    }
+
+    public StringProperty node2Property() {
+        return node2;
+    }
+
+    public void setNode2(String node2) {
+        this.node2.set(node2);
+    }
+
     public NodeEntity(){
+
 
     }
 
