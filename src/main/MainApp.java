@@ -1,5 +1,8 @@
 package main;
 
+import javafx.application.Preloader.StateChangeNotification;
+import javafx.application.Preloader.ProgressNotification;
+import javafx.concurrent.Task;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,6 +16,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import main.view.SearchController;
+import javafx.scene.image.Image;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.application.Platform;
 
 import java.io.IOException;
 
@@ -20,21 +29,38 @@ public class MainApp extends Application {
 
     private Stage primaryStage;
     private BorderPane rootLayout;
+    BooleanProperty ready = new SimpleBooleanProperty(false);
 
     @Override
     public void start(Stage primaryStage) {
+        longStart();
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("THE PANAMA EXPRESS");
+        this.primaryStage.getIcons().add(new Image("file:/home/jan/Development/panama_express/src/main/logo5_small2_no_schrift stock-illustration-23004462-old-fashioned-steam-train-in-schwarz-und-weiß.jpg"));
 
-        initRootLayout();
-        showSearchWindow();
+        ready.addListener(new ChangeListener<Boolean>(){
+            public void changed(
+                    ObservableValue<? extends Boolean> ov, Boolean t, Boolean t1) {
+                if (Boolean.TRUE.equals(t1)) {
+                    Platform.runLater(new Runnable() {
+                        public void run() {
 
+                            initRootLayout();
+                            showSearchWindow();
+
+                        }
+                    });
+                }
+            }
+        });;
     }
+
 
     /**
      * Initializes the root layout.
      */
     public void initRootLayout() {
+
         try {
             // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
@@ -97,10 +123,38 @@ public class MainApp extends Application {
      * @return
      */
     public Stage getPrimaryStage() {
+
         return primaryStage;
+    }
+
+
+    private void longStart() {
+        //simulate long init in background
+        Task task = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                int max = 10;
+                for (int i = 1; i <= max; i++) {
+                    Thread.sleep(300);
+                    // Send progress to preloader
+                    notifyPreloader(new ProgressNotification(((double) i)/max));
+                }
+                // After init is ready, the app is ready to be shown
+                // Do this before hiding the preloader stage to prevent the
+                // app from exiting prematurely
+                ready.setValue(Boolean.TRUE);
+
+                notifyPreloader(new StateChangeNotification(
+                        StateChangeNotification.Type.BEFORE_START));
+
+                return null;
+            }
+        };
+        new Thread(task).start();
     }
 
     public static void main(String[] args) {
         launch(args);
     }
+
 }

@@ -1,5 +1,6 @@
 package main.view;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -114,6 +115,7 @@ public class SearchController {
      */
     @FXML
     private void initialize() {
+
         this.initnodecount();
         searchbutton.setOnAction(this::search);
         queryfield.setOnAction(this::search);
@@ -125,6 +127,8 @@ public class SearchController {
         chartbutton.setOnAction(this::chart);
 
         entitytable.setPlaceholder(new Label("No Results found!"));
+        connectiontable.setPlaceholder(new Label("No Connections found!"));
+        passiv_connectiontable.setPlaceholder(new Label("No Connections found!"));
 
         abstract_column.setCellValueFactory(cellData -> cellData.getValue().abstract_nameProperty());
         type_column.setCellValueFactory(cellData -> cellData.getValue().typeProperty());
@@ -150,6 +154,7 @@ public class SearchController {
 
         entitytable.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldvalue, newvalue) -> showPassivNodeConnections(newvalue));
+
 
         connectiontable.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldvalue, newvalue) -> showNextNode(newvalue));
@@ -383,6 +388,8 @@ public class SearchController {
 
 
     private void showNodeConnections(NodeEntity node) {
+        Platform.runLater(new Runnable() {
+            @Override public void run() {
         if(node != null){
             String index_dir = "/home/jan/Development/panama_search/index_files";
             Searcher searcher = new Searcher();
@@ -391,7 +398,7 @@ public class SearchController {
                 ObservableList<NodeEntity> oblist = FXCollections.observableArrayList();
                 ArrayList<Document> relations = searcher.search(index_dir, "type:relation_node AND node1:" + node.getNode_id());
 //                System.out.println(relations.size());
-                this.connection_count.setText(String.valueOf(relations.size()));
+//                this.connection_count.setText(String.valueOf(relations.size()));
                 if (relations.size() > 0) {
 //                    int count = 1;
                     for (Document doc : relations) {
@@ -423,9 +430,14 @@ public class SearchController {
             connectiontable.setItems(oblist);
 
         }
+
+            }});
     }
 
     private void showPassivNodeConnections(NodeEntity node) {
+        Platform.runLater(new Runnable() {
+            @Override public void run() {
+//put your code here
         if(node != null){
             String index_dir = "/home/jan/Development/panama_search/index_files";
             Searcher searcher = new Searcher();
@@ -466,6 +478,8 @@ public class SearchController {
             passiv_connectiontable.setItems(oblist);
 
         }
+
+            }});
     }
 
     private void initnodecount(){
