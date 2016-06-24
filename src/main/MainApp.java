@@ -36,7 +36,7 @@ public class MainApp extends Application {
         longStart();
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("THE PANAMA EXPRESS");
-        this.primaryStage.getIcons().add(new Image("file:/home/jan/Development/panama_express/src/main/logo5_small2_no_schrift stock-illustration-23004462-old-fashioned-steam-train-in-schwarz-und-weiß.jpg"));
+        this.primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("logo5_small2_no_schrift stock-illustration-23004462-old-fashioned-steam-train-in-schwarz-und-weiß.jpg")));
 
         ready.addListener(new ChangeListener<Boolean>(){
             public void changed(

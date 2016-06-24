@@ -8,14 +8,18 @@ import javafx.application.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
 
+import java.net.URL;
+
 
 public class LongAppInitPreloader extends Preloader {
     ProgressBar bar;
     Stage stage;
     boolean noLoadingProgress = true;
+//    URL url = getClass().getResource("logo5_cropped stock-illustration-23004462-old-fashioned-steam-train-in-schwarz-und-weiß.jpg");
+
 
     private ImageView example_image = new ImageView(new Image(
-            "file:/home/jan/Development/panama_express/src/main/logo5_cropped stock-illustration-23004462-old-fashioned-steam-train-in-schwarz-und-weiß.jpg"));
+            Main.class.getResourceAsStream("logo5_cropped stock-illustration-23004462-old-fashioned-steam-train-in-schwarz-und-weiß.jpg")));
 
     private Scene createPreloaderScene() {
         bar = new ProgressBar(0);
