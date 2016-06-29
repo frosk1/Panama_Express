@@ -7,6 +7,7 @@ import javafx.stage.Stage;
 import javafx.application.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
+import resource.FileLoader;
 
 import java.net.URL;
 
@@ -15,11 +16,11 @@ public class LongAppInitPreloader extends Preloader {
     ProgressBar bar;
     Stage stage;
     boolean noLoadingProgress = true;
-//    URL url = getClass().getResource("logo5_cropped stock-illustration-23004462-old-fashioned-steam-train-in-schwarz-und-weiß.jpg");
+//    URL url = getClass().getResource("panama_express_logo_big.jpg");
 
 
     private ImageView example_image = new ImageView(new Image(
-            Main.class.getResourceAsStream("logo5_cropped stock-illustration-23004462-old-fashioned-steam-train-in-schwarz-und-weiß.jpg")));
+            FileLoader.class.getResourceAsStream("panama_express_logo_big.jpg")));
 
     private Scene createPreloaderScene() {
         bar = new ProgressBar(0);

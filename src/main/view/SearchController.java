@@ -4,16 +4,29 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 import main.MainApp;
+import main.dialogs.NoQueryInput;
 import main.lucene.Searcher;
 import main.model.NodeEntity;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.queryparser.classic.ParseException;
+import javafx.scene.control.Control.*;
+import org.controlsfx.control.CheckComboBox;
+import resource.FileLoader;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +47,9 @@ public class SearchController {
     private Button addresses;
     @FXML
     private Button officers;
+
+    @FXML
+    private Button moreinfo;
 
     @FXML
     private TextField queryfield;
@@ -72,7 +88,6 @@ public class SearchController {
     private TableColumn<NodeEntity, String> passiv_node2_column;
 
 
-
     @FXML
     private Label abstract_name_label;
     @FXML
@@ -93,12 +108,26 @@ public class SearchController {
     private Label addresses_count_label;
 
     @FXML
-    private Label connection_count;
+    private Label active_connection_count;
+
+    @FXML
+    private Label passive_connection_count;
+
+    @FXML
+    private ComboBox<String> box;
 
 
     private MainApp mainApp;
 
+    private String index_dir;
+
+    private FileLoader fileLoader = new FileLoader();
+
     private HashMap<String, Integer> nodecount = new HashMap<>();
+
+    private BorderPane infolayout;
+
+    private NodeEntity currentnode;
 
     /**
      * The constructor.
@@ -117,6 +146,10 @@ public class SearchController {
     private void initialize() {
 
         this.initnodecount();
+
+        box.setPlaceholder(new Label("Country"));
+        box.setItems(fileLoader.countries);
+
         searchbutton.setOnAction(this::search);
         queryfield.setOnAction(this::search);
         offshore_entities.setOnAction(this::search_offshore_entities);
@@ -128,7 +161,9 @@ public class SearchController {
 
         entitytable.setPlaceholder(new Label("No Results found!"));
         connectiontable.setPlaceholder(new Label("No Connections found!"));
+        active_connection_count.setText("");
         passiv_connectiontable.setPlaceholder(new Label("No Connections found!"));
+        passive_connection_count.setText("");
 
         abstract_column.setCellValueFactory(cellData -> cellData.getValue().abstract_nameProperty());
         type_column.setCellValueFactory(cellData -> cellData.getValue().typeProperty());
@@ -159,8 +194,40 @@ public class SearchController {
         connectiontable.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldvalue, newvalue) -> showNextNode(newvalue));
 
+
         passiv_connectiontable.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldvalue, newvalue) -> showPassivNextNode(newvalue));
+
+        box.setOnAction((event) -> {
+            String country = box.getSelectionModel().getSelectedItem();
+            filterCountries(country);
+        });
+
+        moreinfo.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                try {
+
+                    Stage stage = new Stage();
+                    //Fill stage with content
+                    FXMLLoader loader = new FXMLLoader();
+                    loader.setLocation(MainApp.class.getResource("view/information_window.fxml"));
+                    infolayout = (BorderPane) loader.load();
+
+                    InformationController controller = loader.getController();
+                    controller.initNode(currentnode);
+                    // Show the scene containing the root layout.
+
+                    Scene scene = new Scene(infolayout);
+                    stage.setScene(scene);
+//                    InformationController infocontroll = new InformationController(currentnode);
+                    stage.show();
+
+                }
+                catch (IOException z){
+                    z.printStackTrace();
+                }
+            }
+        });
 
 
     }
@@ -179,75 +246,97 @@ public class SearchController {
 
     @FXML
     public void search(ActionEvent e) {
-        String index_dir = "/home/jan/Development/panama_search/index_files";
         Searcher searcher = new Searcher();
-        try {
-            ArrayList<Document> results = searcher.search(index_dir,queryfield.getText());
-            this.initnodecount();
-            entitytable.setItems(this.fill_observable(results));
-            this.showNodeCount();
+        if (!queryfield.getText().equals("")) {
+            try {
+                ArrayList<Document> results = searcher.search(index_dir, queryfield.getText());
+                this.initnodecount();
+                entitytable.setItems(this.fill_observable(results));
+                this.showNodeCount();
 
+
+            } catch (IOException | ParseException f) {
+                f.printStackTrace();
+            }
         }
-        catch (IOException | ParseException f){
-            f.printStackTrace();
+        else {
+            NoQueryInput alert = new NoQueryInput(Alert.AlertType.WARNING);
+            alert.show();
         }
 
     }
 
    @FXML
     public void search_offshore_entities(ActionEvent e) {
-        String index_dir = "/home/jan/Development/panama_search/index_files";
         Searcher searcher = new Searcher();
-        try {
-            ArrayList<Document> results = searcher.search(index_dir, queryfield.getText()+ " AND type:entities");
-            entitytable.setItems(this.fill_observable(results));
+        if (!queryfield.getText().equals("")) {
+           try {
+               ArrayList<Document> results = searcher.search(index_dir, queryfield.getText() + " AND type:entities");
+               entitytable.setItems(this.fill_observable(results));
 
-        }
-        catch (IOException | ParseException f){
-            f.printStackTrace();
-        }
+           } catch (IOException | ParseException f) {
+               f.printStackTrace();
+           }
+       }
+        else {
+           NoQueryInput alert = new NoQueryInput(Alert.AlertType.WARNING);
+           alert.show();
+       }
 
     }
 
     @FXML
     public void search_officers(ActionEvent e) {
-        String index_dir = "/home/jan/Development/panama_search/index_files";
         Searcher searcher = new Searcher();
-        try {
-            ArrayList<Document> results = searcher.search(index_dir, queryfield.getText()+ " AND type:officers");
-            entitytable.setItems(this.fill_observable(results));
+        if (!queryfield.getText().equals("")) {
+            try {
+                ArrayList<Document> results = searcher.search(index_dir, queryfield.getText() + " AND type:officers");
+                entitytable.setItems(this.fill_observable(results));
 
+            } catch (IOException | ParseException f) {
+                f.printStackTrace();
+            }
         }
-        catch (IOException | ParseException f){
-            f.printStackTrace();
+        else {
+            NoQueryInput alert = new NoQueryInput(Alert.AlertType.WARNING);
+            alert.show();
         }
 
     }
 
     @FXML
     public void search_addresses(ActionEvent e) {
-        String index_dir = "/home/jan/Development/panama_search/index_files";
         Searcher searcher = new Searcher();
-        try {
-            ArrayList<Document> results = searcher.search(index_dir, queryfield.getText()+ " AND type:addresses");
-            entitytable.setItems(this.fill_observable(results));
+        if (!queryfield.getText().equals("")) {
+            try {
+                ArrayList<Document> results = searcher.search(index_dir, queryfield.getText() + " AND type:addresses");
+                entitytable.setItems(this.fill_observable(results));
+            } catch (IOException | ParseException f) {
+                f.printStackTrace();
+            }
         }
-        catch (IOException | ParseException f){
-            f.printStackTrace();
+        else {
+            NoQueryInput alert = new NoQueryInput(Alert.AlertType.WARNING);
+            alert.show();
         }
 
     }
-@FXML
-    public void search_intermediaries(ActionEvent e) {
-        String index_dir = "/home/jan/Development/panama_search/index_files";
-        Searcher searcher = new Searcher();
-        try {
-            ArrayList<Document> results = searcher.search(index_dir, queryfield.getText()+ " AND type:intermediaries");
-            entitytable.setItems(this.fill_observable(results));
 
+    @FXML
+    public void search_intermediaries(ActionEvent e) {
+        Searcher searcher = new Searcher();
+        if (!queryfield.getText().equals("")) {
+            try {
+                ArrayList<Document> results = searcher.search(index_dir, queryfield.getText() + " AND type:intermediaries");
+                entitytable.setItems(this.fill_observable(results));
+
+            } catch (IOException | ParseException f) {
+                f.printStackTrace();
+            }
         }
-        catch (IOException | ParseException f){
-            f.printStackTrace();
+        else {
+            NoQueryInput alert = new NoQueryInput(Alert.AlertType.WARNING);
+            alert.show();
         }
 
     }
@@ -337,7 +426,7 @@ public class SearchController {
 
     private void showNodeDetails(NodeEntity node){
         if(node != null){
-
+            currentnode = node;
             abstract_name_label.setText(node.getAbstract_name());
             country_label.setText(node.getCountry());
             country_codes_labels.setText(node.getCountry_codes());
@@ -345,6 +434,7 @@ public class SearchController {
             jurisdiction_label.setText(node.getJurisdiction());
 
         } else {
+            currentnode = null;
             abstract_name_label.setText("");
             country_label.setText("");
             country_codes_labels.setText("");
@@ -354,9 +444,9 @@ public class SearchController {
 
     }
 
+
     private void showNextNode(NodeEntity node) {
         if (node != null) {
-            String index_dir = "/home/jan/Development/panama_search/index_files";
             Searcher searcher = new Searcher();
             try {
                 ObservableList<NodeEntity> oblist = FXCollections.observableArrayList();
@@ -372,7 +462,6 @@ public class SearchController {
 
     private void showPassivNextNode(NodeEntity node) {
         if (node != null) {
-            String index_dir = "/home/jan/Development/panama_search/index_files";
             Searcher searcher = new Searcher();
             try {
                 ObservableList<NodeEntity> oblist = FXCollections.observableArrayList();
@@ -391,16 +480,15 @@ public class SearchController {
         Platform.runLater(new Runnable() {
             @Override public void run() {
         if(node != null){
-            String index_dir = "/home/jan/Development/panama_search/index_files";
             Searcher searcher = new Searcher();
             try {
 
                 ObservableList<NodeEntity> oblist = FXCollections.observableArrayList();
                 ArrayList<Document> relations = searcher.search(index_dir, "type:relation_node AND node1:" + node.getNode_id());
-//                System.out.println(relations.size());
-//                this.connection_count.setText(String.valueOf(relations.size()));
+                active_connection_count.setText(String.valueOf(relations.size()));
+
                 if (relations.size() > 0) {
-//                    int count = 1;
+
                     for (Document doc : relations) {
                         ArrayList<Document> results = searcher.search(index_dir, "node_id:" + doc.getField("node2").stringValue());
                         NodeEntity newNode = new NodeEntity();
@@ -437,18 +525,17 @@ public class SearchController {
     private void showPassivNodeConnections(NodeEntity node) {
         Platform.runLater(new Runnable() {
             @Override public void run() {
-//put your code here
         if(node != null){
-            String index_dir = "/home/jan/Development/panama_search/index_files";
             Searcher searcher = new Searcher();
             try {
 
                 ObservableList<NodeEntity> oblist = FXCollections.observableArrayList();
                 ArrayList<Document> relations = searcher.search(index_dir, "type:relation_node AND node2:" + node.getNode_id());
-//                System.out.println(relations.size());
-//                this.connection_count.setText(String.valueOf(relations.size()));
+
+                passive_connection_count.setText(String.valueOf(relations.size()));
+
                 if (relations.size() > 0) {
-//                    int count = 1;
+
                     for (Document doc : relations) {
                         ArrayList<Document> results = searcher.search(index_dir, "node_id:" + doc.getField("node1").stringValue());
                         NodeEntity newNode = new NodeEntity();
@@ -461,6 +548,7 @@ public class SearchController {
 
                     passiv_connectiontable.setItems(oblist);
                 }
+
                 else if (relations.size()==0){
                     ObservableList<NodeEntity> oblist_empty = FXCollections.observableArrayList();
                     passiv_connectiontable.setItems(oblist_empty);
@@ -481,6 +569,35 @@ public class SearchController {
 
             }});
     }
+
+    private void filterCountries(String country){
+
+        Searcher searcher = new Searcher();
+        if (!queryfield.getText().equals("")) {
+            try {
+                ArrayList<Document> results = searcher.search(index_dir, queryfield.getText() + " AND countries:" + country);
+                entitytable.setItems(this.fill_observable(results));
+
+            } catch (IOException | ParseException f) {
+                f.printStackTrace();
+            }
+        }
+        else {
+            NoQueryInput alert = new NoQueryInput(Alert.AlertType.WARNING);
+            alert.show();
+
+//            alert.setTitle("Warning Dialog");
+//            alert.setHeaderText("NO QUERY INPUT");
+//            alert.setContentText("Please insert a Query before filtering!");
+//            alert.showAndWait();
+        }
+
+    }
+
+    public void initIndexDirectory(String indexdir){
+        this.index_dir = indexdir;
+    }
+
 
     private void initnodecount(){
         this.nodecount.put("entities",0);

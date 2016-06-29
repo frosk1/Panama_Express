@@ -18,30 +18,7 @@ public class NodeEntity {
     private StringProperty node1_name = new SimpleStringProperty("");
     private StringProperty node2_name = new SimpleStringProperty("");
 
-    public String getNode2_name() {
-        return node2_name.get();
-    }
 
-    public String getNode1_name() {
-        return node1_name.get();
-    }
-
-    public StringProperty node1_nameProperty() {
-        return node1_name;
-    }
-
-    public void setNode1_name(String node1_name) {
-        this.node1_name.set(node1_name);
-    }
-
-    public StringProperty node2_nameProperty() {
-
-        return node2_name;
-    }
-
-    public void setNode2_name(String node2_name) {
-        this.node2_name.set(node2_name);
-    }
 
     public NodeEntity(String abstract_name, String type, String country, String country_codes, String jurisdiction, String node_id) {
         this.abstract_name.setValue(abstract_name);
@@ -67,7 +44,30 @@ public class NodeEntity {
     }
 
 
+    public String getNode2_name() {
+        return node2_name.get();
+    }
 
+    public String getNode1_name() {
+        return node1_name.get();
+    }
+
+    public StringProperty node1_nameProperty() {
+        return node1_name;
+    }
+
+    public void setNode1_name(String node1_name) {
+        this.node1_name.set(node1_name);
+    }
+
+    public StringProperty node2_nameProperty() {
+
+        return node2_name;
+    }
+
+    public void setNode2_name(String node2_name) {
+        this.node2_name.set(node2_name);
+    }
 
     public String getRelation() {
         return relation.get();
