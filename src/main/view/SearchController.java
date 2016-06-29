@@ -37,9 +37,6 @@ public class SearchController {
     private Button searchbutton;
 
     @FXML
-    private Button chartbutton;
-
-    @FXML
     private Button offshore_entities;
     @FXML
     private Button intermediaries;
@@ -157,7 +154,6 @@ public class SearchController {
         addresses.setOnAction(this::search_addresses);
         officers.setOnAction(this::search_officers);
 
-        chartbutton.setOnAction(this::chart);
 
         entitytable.setPlaceholder(new Label("No Results found!"));
         connectiontable.setPlaceholder(new Label("No Connections found!"));
@@ -342,25 +338,6 @@ public class SearchController {
     }
 
 
-    @FXML
-    public void chart(ActionEvent e) {
-        try {
-            ObservableList<PieChart.Data> pieChartData =
-                    FXCollections.observableArrayList(
-                            new PieChart.Data("Grapefruit", 13),
-                            new PieChart.Data("Oranges", 25),
-                            new PieChart.Data("Plums", 10),
-                            new PieChart.Data("Pears", 22),
-                            new PieChart.Data("Apples", 30));
-            final PieChart chart = new PieChart(pieChartData);
-            chart.setTitle("Imported Fruits");
-
-            MainApp.showChartWindow(chart);
-        }
-        catch (Exception f){
-            f.printStackTrace();
-        }
-    }
 
     private ObservableList<NodeEntity> fill_observable (ArrayList<Document> docs) {
         ObservableList<NodeEntity> oblist = FXCollections.observableArrayList();
