@@ -72,7 +72,7 @@ public class Indexer {
             document.add(new TextField("name", record.get(0), Field.Store.YES));
 //            document.add(new TextField("icij_id", record.get(1), Field.Store.YES));
 //            document.add(new TextField("valid_until", record.get(2), Field.Store.YES));
-            document.add(new TextField("country_codes", record.get(3), Field.Store.YES));
+//            document.add(new TextField("country_codes", record.get(3), Field.Store.YES));
             document.add(new TextField("countries", record.get(4), Field.Store.YES));
             document.add(new TextField("node_id", record.get(5), Field.Store.YES));
             document.add(new TextField("sourceID", record.get(6), Field.Store.YES));
@@ -87,20 +87,20 @@ public class Indexer {
             document.add(new TextField("name", record.get(0), Field.Store.YES));
 //            document.add(new TextField("original_name", record.get(1), Field.Store.YES));
 //            document.add(new TextField("former_name", record.get(2), Field.Store.YES));
-            document.add(new TextField("jurisdiction", record.get(3), Field.Store.YES));
-//            document.add(new TextField("jurisdiction_description", record.get(4), Field.Store.YES));
+//            document.add(new TextField("jurisdiction", record.get(3), Field.Store.YES));
+            document.add(new TextField("jurisdiction_description", record.get(4), Field.Store.YES));
             document.add(new TextField("company_type", record.get(5), Field.Store.YES));
             document.add(new TextField("address", record.get(6), Field.Store.YES));
 //            document.add(new TextField("internal_id", record.get(7), Field.Store.YES));
 
-//            document.add(new TextField("incorporation_date", record.get(8), Field.Store.YES));
-//            document.add(new TextField("inactivation_date", record.get(9), Field.Store.YES));
+            document.add(new TextField("incorporation_date", record.get(8), Field.Store.YES));
+            document.add(new TextField("inactivation_date", record.get(9), Field.Store.YES));
 //            document.add(new TextField("struck_off_date", record.get(10), Field.Store.YES));
 //            document.add(new TextField("dorm_date", record.get(11), Field.Store.YES));
-//            document.add(new TextField("status", record.get(12), Field.Store.YES));
+            document.add(new TextField("status", record.get(12), Field.Store.YES));
 //            document.add(new TextField("service_provider", record.get(13), Field.Store.YES));
 //            document.add(new TextField("ibcRUC", record.get(14), Field.Store.YES));
-            document.add(new TextField("country_codes", record.get(15), Field.Store.YES));
+//            document.add(new TextField("country_codes", record.get(15), Field.Store.YES));
 
             document.add(new TextField("countries", record.get(16), Field.Store.YES));
 //            document.add(new TextField("note", record.get(17), Field.Store.YES));
@@ -118,7 +118,7 @@ public class Indexer {
 //            document.add(new TextField("internal_id", record.get(1), Field.Store.YES));
             document.add(new TextField("address", record.get(2), Field.Store.YES));
 //            document.add(new TextField("valid_until", record.get(3), Field.Store.YES));
-            document.add(new TextField("country_codes", record.get(4), Field.Store.YES));
+//            document.add(new TextField("country_codes", record.get(4), Field.Store.YES));
             document.add(new TextField("countries", record.get(5), Field.Store.YES));
             document.add(new TextField("status", record.get(6), Field.Store.YES));
             document.add(new TextField("node_id", record.get(7), Field.Store.YES));
@@ -132,7 +132,7 @@ public class Indexer {
             document.add(new TextField("name", record.get(0), Field.Store.YES));
 //            document.add(new TextField("icij_id", record.get(1), Field.Store.YES));
 //            document.add(new TextField("valid_until", record.get(2), Field.Store.YES));
-            document.add(new TextField("country_codes", record.get(3), Field.Store.YES));
+//            document.add(new TextField("country_codes", record.get(3), Field.Store.YES));
             document.add(new TextField("countries", record.get(4), Field.Store.YES));
             document.add(new TextField("node_id", record.get(5), Field.Store.YES));
             document.add(new TextField("sourceID", record.get(6), Field.Store.YES));

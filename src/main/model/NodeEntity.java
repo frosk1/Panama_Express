@@ -2,16 +2,21 @@ package main.model;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.scene.Node;
 
 public class NodeEntity {
 
     private StringProperty abstract_name = new SimpleStringProperty("");
     private StringProperty type = new SimpleStringProperty("");
     private StringProperty country = new SimpleStringProperty("");
-    private StringProperty country_codes = new SimpleStringProperty("");
+    private StringProperty sourceID = new SimpleStringProperty("");
     private StringProperty jurisdiction = new SimpleStringProperty("");
     private StringProperty node_id = new SimpleStringProperty("");
+    private StringProperty status = new SimpleStringProperty("");
+    private StringProperty company_type = new SimpleStringProperty("");
+    private StringProperty incorporation_date = new SimpleStringProperty("");
+    private StringProperty inactivation_date = new SimpleStringProperty("");
+
+
     private StringProperty relation = new SimpleStringProperty("");
     private StringProperty node1 = new SimpleStringProperty("");
     private StringProperty node2 = new SimpleStringProperty("");
@@ -20,20 +25,27 @@ public class NodeEntity {
 
 
 
-    public NodeEntity(String abstract_name, String type, String country, String country_codes, String jurisdiction, String node_id) {
+    public NodeEntity(String abstract_name, String type, String country, String sourceID,
+                      String jurisdiction, String node_id, String status, String company_type,
+                      String incorporation_date, String inactivation_date) {
+
         this.abstract_name.setValue(abstract_name);
         this.type.setValue(type);
         this.country.setValue(country);
-        this.country_codes.setValue(country_codes);
+        this.sourceID.setValue(sourceID);
         this.jurisdiction.setValue(jurisdiction);
         this.node_id.setValue(node_id);
+        this.status.setValue(status);
+        this.company_type.setValue(company_type);
+        this.incorporation_date.setValue(incorporation_date);
+        this.inactivation_date.setValue(inactivation_date);
     }
 
-    public NodeEntity(String abstractname, String type, String country, String country_codes, String node_id){
+    public NodeEntity(String abstractname, String type, String country, String sourceID, String node_id){
         this.abstract_name.setValue(abstractname);
         this.type.setValue(type);
         this.country.setValue(country);
-        this.country_codes.setValue(country_codes);
+        this.sourceID.setValue(sourceID);
         this.node_id.setValue(node_id);
     }
 
@@ -43,6 +55,57 @@ public class NodeEntity {
         this.node2.setValue(node2);
     }
 
+    public NodeEntity(){
+
+    }
+
+    public String getStatus() {
+        return status.get();
+    }
+
+    public StringProperty statusProperty() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status.set(status);
+    }
+
+    public String getCompany_type() {
+        return company_type.get();
+    }
+
+    public StringProperty company_typeProperty() {
+        return company_type;
+    }
+
+    public void setCompany_type(String company_type) {
+        this.company_type.set(company_type);
+    }
+
+    public String getIncorporation_date() {
+        return incorporation_date.get();
+    }
+
+    public StringProperty incorporation_dateProperty() {
+        return incorporation_date;
+    }
+
+    public void setIncorporation_date(String incorporation_date) {
+        this.incorporation_date.set(incorporation_date);
+    }
+
+    public String getInactivation_date() {
+        return inactivation_date.get();
+    }
+
+    public StringProperty inactivation_dateProperty() {
+        return inactivation_date;
+    }
+
+    public void setInactivation_date(String inactivation_date) {
+        this.inactivation_date.set(inactivation_date);
+    }
 
     public String getNode2_name() {
         return node2_name.get();
@@ -105,11 +168,6 @@ public class NodeEntity {
         this.node2.set(node2);
     }
 
-    public NodeEntity(){
-
-
-    }
-
     public String getNode_id() {
         return node_id.get();
     }
@@ -158,16 +216,16 @@ public class NodeEntity {
         this.country.set(country);
     }
 
-    public String getCountry_codes() {
-        return country_codes.get();
+    public String getSourceID() {
+        return sourceID.get();
     }
 
-    public StringProperty country_codesProperty() {
-        return country_codes;
+    public StringProperty sourceIDProperty() {
+        return sourceID;
     }
 
-    public void setCountry_codes(String country_codes) {
-        this.country_codes.set(country_codes);
+    public void setSourceID(String sourceID) {
+        this.sourceID.set(sourceID);
     }
 
     public String getJurisdiction() {
