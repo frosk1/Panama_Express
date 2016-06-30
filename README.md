@@ -23,7 +23,8 @@ https://sourceforge.net/projects/panama-express/
 
     2. Run .jar file
  
-    3. Select database directory
+    3. Select database directory and wait till indexing finished
+       (this step only has to be done at the first time)
 
     4. start search
 
