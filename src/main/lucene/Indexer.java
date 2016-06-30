@@ -13,16 +13,38 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
+/**
+ * The Indexer Class uses Lucenes standard pipeline workflow for indexing Document
+ * objects. A StandardAnalyzer is used to analyze the String, that is wanted to be
+ * indexed. For indexing there are 5 different types of documents:
+ *
+ * - Offshore Entities      --> corresponding File Entities.csv
+ * - Addresses              --> corresponding File Addresses.csv
+ * - Intermediaries         --> corresponding File Intermediaries.csv
+ * - Officers               --> corresponding File Officers.csv
+ * - Relation_node          --> corresponding File all_edges.csv
+ *
+ * @author IMS_CREW
+ * @version 1.1
+ * @since 1.0
+ */
 public class Indexer {
 
     private IndexWriter writer;
 
+    /**
+     * Countructor method initializes the index directory, the analyzer and
+     * the acutal IndexWriter objects.
+     *
+     * @param indexDirectoryPath        String contains dirpath to store the indexing files
+     * @throws IOException
+     * @since 1.0
+     */
     public Indexer(String indexDirectoryPath) throws IOException{
 
         //this directory will contain the indexes
@@ -41,6 +63,16 @@ public class Indexer {
         writer.close();
     }
 
+    /**
+     * The method preprocess_file uses an CSV parser to parse the files.
+     * Every line is now gonna be initialized as a certain type of Document
+     * object.
+     *
+     * @param file          File Object for the current .csv-file
+     * @return              ArrayList of created documents
+     * @throws IOException
+     * @since 1.0
+     */
     private ArrayList<Document> preprocess_file(File file) throws IOException{
 
         ArrayList<Document> documents = new ArrayList<>();
@@ -61,6 +93,20 @@ public class Indexer {
     }
 
 
+    /**
+     * The method makeDocument is the core method of this Indexer class. The method
+     * becomes a CSVRecord objects, which represents a parsed line of a .csv-file and
+     * the corresponding file name. Every line is gonna be initzialized as a new Document
+     * object according to the name of the .csv file.
+     *
+     * (In this Indexer class it can be decided which information from the database should be
+     * indexed !)
+     *
+     * @param record        CSVRecord objects containing parsed line from a .csv-file
+     * @param filename      String filename contains the name of the .csv-file
+     * @return
+     * @since 1.0
+     */
     private Document makeDocument(CSVRecord record, String filename){
         Document document = new Document();
 
@@ -152,11 +198,17 @@ public class Indexer {
     }
 
 
-
-
-
-
-
+    /**
+     * The getDocument method can make a Document object out of a given file object.
+     *
+     * !!! This method is obsolete and only for testing mechanisms !!!
+     * !!! It is not used for indexing the panama papers database !!!
+     *
+     * @param file
+     * @return
+     * @throws IOException
+     * @since 1.0
+     */
     private Document getDocument(File file) throws IOException{
 
         Document document = new Document();
@@ -176,6 +228,14 @@ public class Indexer {
         return document;
     }
 
+    /**
+     * The method indexFile2 calls the preprocess method and gives the acutal
+     * Writer object the created document objects for indexing.
+     *
+     * @param file              File object for a file that should be indexed.
+     * @throws IOException
+     * @since 1.0
+     */
     private void indexFile2(File file) throws IOException{
             ArrayList<Document> documents = this.preprocess_file(file);
             writer.addDocuments(documents);
@@ -185,12 +245,35 @@ public class Indexer {
         System.out.println("finished indexing");
     }
 
+    /**
+     * The indexFile method calls the getDocument method and create the index files
+     * with the Writer object.
+     *
+     * !!! The indexFile method is obsolete and should not be used for indexing
+     * the panama paper database !!!
+     *
+     * @param file
+     * @throws IOException
+     * @since 1.0
+     */
     private void indexFile(File file) throws IOException{
         System.out.println("Indexing "+file.getCanonicalPath());
         Document document = getDocument(file);
         writer.addDocument(document);
     }
 
+
+    /**
+     * The createIndex method is public and the startpoint to index files from a database.
+     * With the given dirpath and a FileFilter, which speficies the files that should be used
+     * for indexing, it calls the methods placed in this class to create the index files.
+     *
+     * @param dataDirPath       String contains the path of the database
+     * @param filter            FileFilter object to specifiy the files for indexing
+     * @return
+     * @throws IOException
+     * @since 1.0
+     */
     public int createIndex(String dataDirPath, FileFilter filter)
             throws IOException{
         //get all files in the data directory

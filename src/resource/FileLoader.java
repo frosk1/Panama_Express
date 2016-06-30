@@ -5,17 +5,35 @@ import javafx.collections.ObservableList;
 
 import java.io.*;
 
+/**
+ * The FileLoader class provides base methods for reading the ressource
+ * and config files.
+ *
+ *
+ * @author IMS_CREW
+ * @version 1.1
+ * @since 1.0
+ */
 public class FileLoader {
 
     public final ObservableList<String> countries = FXCollections.observableArrayList();
 
+    /**
+     * Contructor method calls the readCountries method right away.
+     *
+     * @since 1.0
+     */
     public FileLoader() {
         this.readCountries();
     }
 
-    ;
 
-
+    /**
+     * The readCountries method read from the countries.txt and fills the
+     * ObservableList with String containing country names.
+     *
+     * @since 1.0
+     */
     private void readCountries() {
 
         String line = "";
@@ -40,6 +58,14 @@ public class FileLoader {
         }
     }
 
+    /**
+     * The readConfigFile method can be used for reading the config file.
+     * With version 1.0 there is no need for reading the config File.
+     *
+     * @param config_file_path          String containing the config-file path
+     * @return
+     * @since 1.0
+     */
     public static String readConfigFile(String config_file_path) {
 
         String line = "";

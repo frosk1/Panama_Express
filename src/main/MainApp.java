@@ -4,17 +4,10 @@ import javafx.application.Preloader.StateChangeNotification;
 import javafx.application.Preloader.ProgressNotification;
 import javafx.concurrent.Task;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.JavaFXBuilderFactory;
-import javafx.scene.Group;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.PieChart;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import main.lucene.File_Filter;
@@ -26,14 +19,23 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.application.Platform;
-import org.controlsfx.control.CheckComboBox;
 import resource.FileLoader;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+/**
+ * The MainApp class extends Application from the javafx Framework. This class
+ * is the acutal Application class for the Panama Express application.
+ * It initialize the primary Stage, setup the root layout and the search layout
+ * for the application.
+ *
+ *
+ * @author IMS_CREW
+ * @version 1.1
+ * @since 1.0
+ */
 public class MainApp extends Application {
 
     private Stage primaryStage;
@@ -42,6 +44,17 @@ public class MainApp extends Application {
     private String database_dir = "";
     private String config_dir = "";
 
+    /**
+     * The start method is called right after the Preloader class is finished.
+     * The BooleanProperty ready has an Changelistener, to recognize the ready status
+     * of the Preloader. First it will be checked if there a configdir exist, if not
+     * indexing has to be done. After the indexing process finished, the primary stage
+     * will be shown and filled with the root and search_window layout. This all
+     * runs under a new Thread.
+     *
+     * @param primaryStage          Stage object representing the main Stage
+     * @since 1.0
+     */
     @Override
     public void start(Stage primaryStage) {
         longStart();
@@ -69,7 +82,10 @@ public class MainApp extends Application {
 
 
     /**
-     * Initializes the root layout.
+     * The initRootLayout method initializes the root layout, using the
+     * Rooutlayout.fxml view.
+     *
+     * @since 1.0
      */
     public void initRootLayout() {
 
@@ -89,24 +105,23 @@ public class MainApp extends Application {
     }
 
     /**
-     * Shows the person overview inside the root layout.
+     * The showSearchWindow method shows the Search window inside the root layout,
+     * using the search_window.fxml and the controller class SearchController.
+     *
+     * @since 1.0
      */
     public void showSearchWindow() {
         try {
-            // Load person overview.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/search_window.fxml"));
             AnchorPane search_window = (AnchorPane) loader.load();
-                    // create the data to show in the CheckComboBox
 
-
-            // Set person overview into the center of root layout.
             rootLayout.setCenter(search_window);
 
             SearchController controller = loader.getController();
             controller.initIndexDirectory(this.config_dir);
-//            controller.setMainApp(this);
 
+//            controller.setMainApp(this); // can be used as interface between MainApp and SearchController
 
 
         } catch (IOException e) {
@@ -125,6 +140,14 @@ public class MainApp extends Application {
 
     }
 
+    /**
+     * The checkForIndexFiles method checks if the configdir 'panama_express', which
+     * contains the index files and the config file, exist. If this is not the case
+     * the IndexerWindow is shown and the acutal indexing can be processed. Therefore the
+     * method createIndexFiles is called with the given database dir.
+     *
+     * @since 1.0
+     */
     public void checkForIndexFiles(){
         if (new File(System.getProperty("user.home"),"panama_express").exists()){
             this.config_dir= new File(System.getProperty("user.home"),"panama_express").getAbsolutePath();
@@ -158,6 +181,14 @@ public class MainApp extends Application {
 
     }
 
+    /**
+     * The createIndexFiles method initialize a new Indexer and File_Filter
+     * to create the index files for the Search Engine. The database dir is
+     * given by the user.
+     *
+     * @param database_dir      String containing the dir path to the ICIJ database
+     * @since 1.0
+     */
     public void createIndexFiles(String database_dir){
         try {
             File_Filter file_filter = new File_Filter();
@@ -172,34 +203,27 @@ public class MainApp extends Application {
     }
 
 
-    public static void showChartWindow( PieChart chart) throws Exception{
-        Stage dialog = new Stage();
-       FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(MainApp.class.getResource("view/chart_window.fxml"));
-//        Parent page = (Parent) FXMLLoader.load(MainApp.class.getResource("view/chart_window.fxml"));
-
-        BorderPane chartlayout = (BorderPane) loader.load();
-        Scene scene = new Scene(chartlayout);
-
-
-
-        chartlayout.setCenter(chart);
-//        ((BorderPane) scene.getRoot()).getChildren().add(chart);
-
-        dialog.setScene(scene);
-        dialog.show();
-    }
-
     /**
-     * Returns the main stage.
+     * The get PrimaryStage method returns the main stage.
+     * (Getter Method for the primary stage)
+     *
      * @return
+     * @since 1.0
      */
     public Stage getPrimaryStage() {
 
         return primaryStage;
     }
 
-
+    /**
+     * The longStart method starts a new Task to show the Preloader stage
+     * with the actual logo. This long Start is actually not needed, it is
+     * just to give the user more time so setup and show the logo.
+     *
+     * The construct of this method is given by Oracle.
+     *
+     * @since 1.0
+     */
     private void longStart() {
         //simulate long init in background
         Task task = new Task<Void>() {
@@ -225,6 +249,13 @@ public class MainApp extends Application {
         new Thread(task).start();
     }
 
+    /**
+     * A Main method for the MainAppliation to launch, it calls the start method
+     * of this class.
+     *
+     * @param args
+     * @since 1.0
+     */
     public static void main(String[] args) {
         launch(args);
     }

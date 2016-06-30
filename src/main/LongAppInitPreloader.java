@@ -9,14 +9,22 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
 import resource.FileLoader;
 
-import java.net.URL;
 
-
+/**
+ * The LonaAppInitPreloader extends the Preloader class from the javafx Framework.
+ * This Preloader class mainly is therefore to setup a Preloader, can can show
+ * the logo and give the user time to set everythin up. The Preloader is not
+ * needed, due to the fact, that the main application is fast enough to initialize.
+ * The construct of this code if given by Oracle.
+ *
+ * @author IMS_CREW
+ * @version 1.1
+ * @since 1.0
+ */
 public class LongAppInitPreloader extends Preloader {
     ProgressBar bar;
     Stage stage;
     boolean noLoadingProgress = true;
-//    URL url = getClass().getResource("panama_express_logo_big.jpg");
 
 
     private ImageView example_image = new ImageView(new Image(
