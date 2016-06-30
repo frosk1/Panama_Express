@@ -36,11 +36,11 @@ https://sourceforge.net/projects/panama-express/
 
 ### Contribution guidelines ###
 
-* Writing tests
 * Clone this repository to your local machine and create your own branch
 * Make sure your commits do not break the funtionality of the project
 * Make a push-request to our master branch
 * Push and be part of the project
+* Write tests for your contributions :)
 
 ### Who do I talk to? ###
 
