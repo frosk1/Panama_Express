@@ -14,6 +14,19 @@ The Panama Papers database contains offshore companies information based on file
 
 * The first point to take into account is that the Panama Papers database should be downloaded at https://offshoreleaks.icij.org/pages/database. We do NOT provide the data. 
 * As soon as you have the data you can start with our Panama Express search engine. This project can be cloned or downloaded by means of a .jar-file. We strongly recomend to use the jar, as it is easier to use.
+* You can download the newest stable version on Sourceforge Panama Express Project:
+https://sourceforge.net/projects/panama-express/
+
+- What to do?:
+
+    1. Download the Database
+
+    2. Run .jar file
+ 
+    3. Select database directory
+
+    4. start search
+
 
 * Content: we provide different classes in our project
     - Indexer: Builds the indexes
@@ -23,9 +36,11 @@ The Panama Papers database contains offshore companies information based on file
 
 ### Contribution guidelines ###
 
-* Writing tests
-* Code review
-* Other guidelines
+* Clone this repository to your local machine and create your own branch
+* Make sure your commits do not break the funtionality of the project
+* Make a push-request to our master branch
+* Push and be part of the project
+* Write tests for your contributions :)
 
 ### Who do I talk to? ###
 
