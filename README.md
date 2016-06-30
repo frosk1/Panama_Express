@@ -16,11 +16,13 @@ The Panama Papers database contains offshore companies information based on file
 * As soon as you have the data you can start with our Panama Express search engine. This project can be cloned or downloaded by means of a .jar-file. We strongly recomend to use the jar, as it is easier to use.
 * You can download the newest stable version on Sourceforge Panama Express Project:
 https://sourceforge.net/projects/panama-express/
- -Steps to follow:
+
+- What to do?
 1. Download the Database
 2. Run .jar file
 3. Select database directory
 4. start search
+
 
 * Content: we provide different classes in our project
     - Indexer: Builds the indexes
@@ -31,8 +33,10 @@ https://sourceforge.net/projects/panama-express/
 ### Contribution guidelines ###
 
 * Writing tests
-* Code review
-* Other guidelines
+* Clone this repository to your local machine and create your own branch
+* Make sure your commits do not break the funtionality of the project
+* Make a push-request to our master branch
+* Push and be part of the project
 
 ### Who do I talk to? ###
 
