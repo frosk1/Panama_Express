@@ -4,10 +4,8 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -23,12 +21,21 @@ import main.model.NodeEntity;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.queryparser.classic.ParseException;
 import resource.FileLoader;
-
-import javax.print.Doc;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
+/**
+ * Controller class for the search-window frontend provided by the search_window.fxml.
+ * This class is a interface for the model class NodeEntity and the view search_window.
+ * All the methods implemented in this class are used to link the search_window view with
+ * the model NodeEntity. The backend classes Indexer and Searcher are placed in this class.
+ *
+ * @author IMS_CREW
+ * @version 1.1
+ * @since 1.0
+ */
 public class SearchController {
 
     @FXML
@@ -129,17 +136,23 @@ public class SearchController {
     private ArrayList<NodeEntity> currentnode_passive_connections = new ArrayList<>();
 
     /**
-     * The constructor.
-     * The constructor is called before the initialize() method.
+     * The default constructor.
+     * This constructor method is called before the initialize() method.
+     * @since 1.0
      */
     public SearchController() {
-
 
     }
 
     /**
-     * Initializes the controller class. This method is automatically called
-     * after the fxml file has been loaded.
+     * This method initializes the controller class and is automatically called right
+     * after the search_window.fxml file has been loaded.
+     *
+     * The Eventhandler methods are linked to the corresponding frontend container. Furthermore
+     * specific Changelistener are also set to the corresponding frontend containers. The Label
+     * container are getting init values.
+     *
+     * @since 1.0
      */
     @FXML
     private void initialize() {
@@ -208,16 +221,26 @@ public class SearchController {
 
     /**
      * Is called by the main application to give a reference back to itself.
+     * Can be seen as interface betweetn the MainApp class and this controller.
      *
      * @param mainApp
+     * @since 1.0
      */
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
-
-
     }
 
 
+    /**
+     * The search method for the acutal search-button container in the frontend.
+     * Initalize a Searcher object and search  for the given String (by the queryfield)
+     * through the index files using lucene IR-system. The default indexed field is
+     * the 'name'-field from the indexed documents. It uses the full functionality of
+     * the Queryparser from the Searcher Class.
+     *
+     * @param e     ActionEvent triggerd by clicking the search-button.
+     * @since 1.0
+     */
     @FXML
     public void search(ActionEvent e) {
         Searcher searcher = new Searcher();
@@ -242,7 +265,17 @@ public class SearchController {
 
     }
 
-   @FXML
+    /**
+     * The search method for the offshore_entities-button container in the frontend.
+     * Initalize a Searcher object and do a Boolean Search with the given String(by the queryfield)
+     * and the AND type:entities constraint.The default indexed field is the 'name'-field
+     * from the indexed documents. This method is only used for filtering a given Query, given by
+     * the String from the queryfield.
+     *
+     * @param e     ActionEvent triggerd by clicking the offshore_entities-button.
+     * @since 1.0
+     */
+    @FXML
     public void search_offshore_entities(ActionEvent e) {
         Searcher searcher = new Searcher();
         box.setValue("Filter by Country");
@@ -264,6 +297,17 @@ public class SearchController {
 
     }
 
+
+    /**
+     *  The search method for the officers-button container in the frontend.
+     * Initalize a Searcher object and do a Boolean Search with the given String(by the queryfield)
+     * and the AND type:officers constraint.The default indexed field is the 'name'-field
+     * from the indexed documents. This method is only used for filtering a given Query, given by
+     * the String from the queryfield.
+     *
+     * @param e     ActionEvent triggerd by clicking the officers-button.
+     * @since 1.0
+     */
     @FXML
     public void search_officers(ActionEvent e) {
         Searcher searcher = new Searcher();
@@ -286,6 +330,17 @@ public class SearchController {
 
     }
 
+
+    /**
+     * The search method for the addresses-button container in the frontend.
+     * Initalize a Searcher object and do a Boolean Search with the given String(by the queryfield)
+     * and the AND type:addresses constraint.The default indexed field is the 'name'-field
+     * from the indexed documents. This method is only used for filtering a given Query, given by
+     * the String from the queryfield.
+     *
+     * @param e     ActionEvent triggerd by clicking the addresses-button.
+     * @since 1.0
+     */
     @FXML
     public void search_addresses(ActionEvent e) {
         Searcher searcher = new Searcher();
@@ -296,7 +351,6 @@ public class SearchController {
                 ArrayList<Document> results = searcher.search(index_dir, queryfield.getText() + " AND type:addresses");
                 entitytable.setItems(this.fill_observable(results));
                 this.showNodeCount();
-
 
             } catch (IOException | ParseException f) {
                 f.printStackTrace();
@@ -309,6 +363,16 @@ public class SearchController {
 
     }
 
+    /**
+     * The search method for the intermediares-button container in the frontend.
+     * Initalize a Searcher object and do a Boolean Search with the given String(by the queryfield)
+     * and the AND type:intermediaries constraint.The default indexed field is the 'name'-field
+     * from the indexed documents. This method is only used for filtering a given Query, given by
+     * the String from the queryfield.
+     *
+     * @param e     ActionEvent triggerd by clicking the intermediaries-button.
+     * @since 1.0
+     */
     @FXML
     public void search_intermediaries(ActionEvent e) {
         Searcher searcher = new Searcher();
@@ -332,7 +396,16 @@ public class SearchController {
     }
 
 
-
+    /**
+     * The fill_observable method is used for initialize NodeEntity model objects.
+     * The return of the search method from the Searcher class gives back a list
+     * of ranked Document objects found in the indexed files. The method wraps the
+     * documents into NodeEntity objects.
+     *
+     * @param docs     ArrayList containing resulting Document objects from the search
+     * @return oblist  ObservableArrayList containing NodeEntity objects
+     * @since 1.0
+     */
     private ObservableList<NodeEntity> fill_observable (ArrayList<Document> docs) {
         ObservableList<NodeEntity> oblist = FXCollections.observableArrayList();
         for (Document doc: docs) {
@@ -374,9 +447,14 @@ public class SearchController {
     }
 
 
-
-
-
+    /**
+     * The showNodeDetails method fills the corresponding label container in the frontend.
+     * If there is no node selected, the labels are set to null. Used by the entitytable
+     * container.
+     *
+     * @param node      The selected NodeEntity from the entitytable container.
+     * @since 1.0
+     */
     private void showNodeDetails(NodeEntity node){
         if(node != null){
             currentnode = node;
@@ -398,6 +476,17 @@ public class SearchController {
     }
 
 
+    /**
+     * The method showNextNode takes the given NodeEntity from the connectiontable
+     * and fills a new EntityNode by searching for the node_id field in the indexed
+     * files. The new EnitityNode then gets the every information, which is available.
+     *
+     * (The stored NodeEntity objects from the connectiontable only consists of abstractname,
+     * relation and node_ids.)
+     *
+     * @param node      selected NodeEntity object from the connectiontable container.
+     * @since 1.0
+     */
     private void showNextNode(NodeEntity node) {
         if (node != null) {
             Searcher searcher = new Searcher();
@@ -413,6 +502,17 @@ public class SearchController {
         }
     }
 
+    /**
+     * The method showPassivNextNode takes the given NodeEntity from the passive_connectiontable
+     * and fills a new EntityNode by searching for the node_id field in the indexed
+     * files. The new EnitityNode then gets the every information, which is available.
+     *
+     * (The stored NodeEntity objects from the passive_connectiontable only consists of abstractname,
+     * relation and node_ids.)
+     *
+     * @param node      selected NodeEntity object from the passive_connectiontable container.
+     * @since 1.0
+     */
     private void showPassivNextNode(NodeEntity node) {
         if (node != null) {
             Searcher searcher = new Searcher();
@@ -429,6 +529,19 @@ public class SearchController {
     }
 
 
+    /**
+     * The showNodeConnections method init a new Search object for searching active Connections
+     * of a given Node from the entitytable. Doing a boolean Search for the acutal relation_node
+     * field, gives back Document objects with the the type relation_node, the active node1_id and
+     * the passive node2_id. After finding all active connection node_id's, it will be search for
+     * the information, which is available for the found active connection node_id's.
+     *
+     * (This method needs to run under another Thread, due to certain Exceptions thrown by the
+     * JavaFX Framework.)
+     *
+     * @param node      selected NodeEntity object from the entitytable
+     * @since 1.0
+     */
     private void showNodeConnections(NodeEntity node) {
         this.resetConnectionCount();
         this.currentnode_active_connections.clear();
@@ -479,6 +592,19 @@ public class SearchController {
             }});
     }
 
+    /**
+     * The showPassivNodeConnections method init a new Search object for searching passive Connections
+     * of a given Node from the entitytable. Doing a boolean Search for the acutal relation_node
+     * field, gives back Document objects with the the type relation_node, the active node1_id and
+     * the passive node2_id. After finding all passive connection node_id's, it will be search for
+     * the information, which is available for the found passive connection node_id's.
+     *
+     * (This method needs to run under another Thread, due to certain Exceptions thrown by the
+     * JavaFX Framework.)
+     *
+     * @param node      selected NodeEntity object from the entitytable
+     * @since 1.0
+     */
     private void showPassivNodeConnections(NodeEntity node) {
         this.resetConnectionCount();
         this.currentnode_passive_connections.clear();
@@ -531,6 +657,15 @@ public class SearchController {
             }});
     }
 
+    /**
+     * The filterCountries method initialize a new Searcher object for using a Boolean Search
+     * with the given country entry from the box(combobox container containing country names).
+     * This will filter the origin query given by the queryfield by the countries field indexed
+     * the files with adding an AND countries: to the query.
+     *
+     * @param country       selected String from the combobox for the countries
+     * @since 1.0
+     */
     private void filterCountries(String country){
 
         Searcher searcher = new Searcher();
@@ -548,24 +683,38 @@ public class SearchController {
         else {
             NoQueryInput alert = new NoQueryInput(Alert.AlertType.WARNING);
             alert.show();
-
-//            alert.setTitle("Warning Dialog");
-//            alert.setHeaderText("NO QUERY INPUT");
-//            alert.setContentText("Please insert a Query before filtering!");
-//            alert.showAndWait();
         }
 
     }
 
+    /**
+     * The initIndexDirectory method is an interface for the MainApp class. to link
+     * the index directory for the Searcher class given by the config folder.
+     *
+     * @param indexdir      String containing the path of the index directory.
+     * @since 1.0
+     */
     public void initIndexDirectory(String indexdir){
         this.index_dir = indexdir;
     }
 
+    /**
+     * The resetConnectionCount method sets the active and passice conntecion labels
+     * to zero.
+     *
+     * @since 1.0
+     */
     private void resetConnectionCount(){
         this.active_connection_count.setText("0");
         this.passive_connection_count.setText("0");
     }
 
+
+    /**
+     * The method initnodecount initializes the nodecount map.
+     *
+     * @since 1.0
+     */
     private void initnodecount(){
         this.nodecount.put("entities",0);
         this.nodecount.put("officers",0);
@@ -573,6 +722,12 @@ public class SearchController {
         this.nodecount.put("addresses",0);
     }
 
+    /**
+     * The showNodeCount method set the labels of the different counter nodes.
+     * After every count ist set, the nodecount map is reset to zero.
+     *
+     * @since 1.0
+     */
     private void showNodeCount(){
         officers_count_label.setText(this.nodecount.get("officers").toString());
         this.nodecount.put("officers",0);
@@ -584,6 +739,13 @@ public class SearchController {
         this.nodecount.put("addresses",0);
     }
 
+    /**
+     * The fillnodecount method takes a Document object and counts the
+     * different type of these document objects in the nodecount map.
+     *
+     * @param doc       Document Object object from the search results.
+     * @since 1.0
+     */
     private void fillnodecount(Document doc){
 
          if (doc.getField("type").stringValue().equals("entities")) {
@@ -605,6 +767,13 @@ public class SearchController {
 
     }
 
+
+    /**
+     * The resetNodecount method resets the counter in the nodecount map.
+     *
+     * (This method has become obsolete in version 1.1)
+     * @since 1.0
+     */
     private void resetNodecount(){
         this.nodecount.put("officers",0);
         this.nodecount.put("entities",0);
@@ -613,6 +782,13 @@ public class SearchController {
     }
 
 
+    /**
+     * The Method showInformationWindow is an Eventhandler for the moreinfo button container
+     * in the frontend. A new Stage called Information Window will be opened. The corresponding
+     * Frontend is the information_window.fxml, controlled by the Controller class InformationController.
+     *
+     * @param e     ActionEvent triggerd by klicking the moreinf button container
+     */
     public void showInformationWindow(ActionEvent e) {
                 try {
 
