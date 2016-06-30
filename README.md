@@ -34,7 +34,7 @@ https://sourceforge.net/projects/panama-express/
     - Searcher: Processes the query through the inder files
     - Model: Contains the database class
     - View: Contains the grapical interface for the frontend
-    - COntroller: Interface for the Model and View
+    - Controller: Interface for the Model and View
 
 
 ### Contribution guidelines ###
