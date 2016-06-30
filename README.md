@@ -23,7 +23,8 @@ https://sourceforge.net/projects/panama-express/
 
     2. Run .jar file
  
-    3. Select database directory
+    3. Select database directory and wait till indexing finished
+(this step only has to be done at the first time)
 
     4. start search
 
@@ -32,13 +33,15 @@ https://sourceforge.net/projects/panama-express/
     - Indexer: Builds the indexes
     - Searcher: Processes the query through the inder files
     - Model: Contains the database class
-    - View: Contains the grapical interface for the final
+    - View: Contains the grapical interface for the frontend
+    - Controller: Interface for the Model and View
+
 
 ### Contribution guidelines ###
 
-* Clone this repository to your local machine and create your own branch
+* Fork his repository, clone it to your local machine and create your own branch
 * Make sure your commits do not break the funtionality of the project
-* Make a push-request to our master branch
+* Make a pull-request to our master branch
 * Push and be part of the project
 * Write tests for your contributions :)
 
