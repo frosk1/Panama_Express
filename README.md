@@ -17,15 +17,15 @@ The Panama Papers database contains offshore companies information based on file
 * You can download the newest stable version on Sourceforge Panama Express Project:
 https://sourceforge.net/projects/panama-express/
 
-- What to do?
+- What to do?:
 
-   1. Download the Database
+    1. Download the Database
 
-   2. Run .jar file
+    2. Run .jar file
+ 
+    3. Select database directory
 
-   3. Select database directory
-
-   4. start search
+    4. start search
 
 
 * Content: we provide different classes in our project
