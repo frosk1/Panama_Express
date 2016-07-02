@@ -59,7 +59,7 @@ public class MainApp extends Application {
     public void start(Stage primaryStage) {
         longStart();
         this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("THE PANAMA EXPRESS");
+        this.primaryStage.setTitle("The Panama Express");
         this.primaryStage.getIcons().add(new Image(FileLoader.class.getResourceAsStream("panama_express_logo_small.jpg")));
 
 

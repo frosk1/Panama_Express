@@ -1,12 +1,15 @@
 package main;
 
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.application.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
+import main.view.SearchController;
 import resource.FileLoader;
 
 
@@ -32,22 +35,34 @@ public class LongAppInitPreloader extends Preloader {
 
     private Scene createPreloaderScene() {
         bar = new ProgressBar(0);
+        bar.setStyle("-fx-accent: #1d1d1d;");
+        bar.setPrefSize(1000.0,30.0);
         BorderPane p = new BorderPane();
+        p.setStyle("-fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #1d1d1d, #363636)");
         p.setBottom(bar);
+
         example_image.setFitHeight(400);
         example_image.setFitWidth(400);
         example_image.setPreserveRatio(true);
-
         p.setCenter(example_image);
-        return new Scene(p, 300, 150);
+        Label l = new Label("Version 1.21");
+        l.setTextFill(Color.web("#ffffff"));
+        p.setTop(l);
+        Scene s = new Scene(p, 300, 150);
+
+        return s;
     }
 
     public void start(Stage stage) throws Exception {
         this.stage = stage;
+        this.stage.setTitle("The Paname Express");
+        this.stage.getIcons().add(new Image(FileLoader.class.getResourceAsStream("panama_express_logo_small.jpg")));
         this.stage.setWidth(800);
         this.stage.setHeight(600);
+
         stage.setScene(createPreloaderScene());
         stage.show();
+
     }
 
     @Override

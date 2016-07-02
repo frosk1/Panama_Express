@@ -16,6 +16,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import main.MainApp;
 import main.dialogs.NoQueryInput;
+import main.dialogs.NoSelectionInput;
 import main.lucene.Searcher;
 import main.model.NodeEntity;
 import org.apache.lucene.document.Document;
@@ -494,6 +495,7 @@ public class SearchController {
                 ObservableList<NodeEntity> oblist = FXCollections.observableArrayList();
                 ArrayList<Document> connectednode = searcher.search(index_dir, "node_id:" + node.getNode2());
                 entitytable.setItems(this.fill_observable(connectednode));
+                this.showNodeCount();
 
             } catch (IOException | ParseException e) {
                 e.printStackTrace();
@@ -520,6 +522,7 @@ public class SearchController {
                 ObservableList<NodeEntity> oblist = FXCollections.observableArrayList();
                 ArrayList<Document> connectednode = searcher.search(index_dir, "node_id:" + node.getNode1());
                 entitytable.setItems(this.fill_observable(connectednode));
+                this.showNodeCount();
 
             } catch (IOException | ParseException e) {
                 e.printStackTrace();
@@ -790,28 +793,33 @@ public class SearchController {
      * @param e     ActionEvent triggerd by klicking the moreinf button container
      */
     public void showInformationWindow(ActionEvent e) {
-                try {
+        if(!queryfield.getText().equals("") && currentnode != null) {
+            try {
 
-                    Stage stage = new Stage();
-                    stage.setTitle("Information Window");
-                    stage.getIcons().add(new Image(FileLoader.class.getResourceAsStream("panama_express_logo_small.jpg")));
+                Stage stage = new Stage();
+                stage.setTitle("Information Window");
+                stage.getIcons().add(new Image(FileLoader.class.getResourceAsStream("panama_express_logo_small.jpg")));
 
-                    //Fill stage with content
-                    FXMLLoader loader = new FXMLLoader();
-                    loader.setLocation(MainApp.class.getResource("view/information_window.fxml"));
-                    infolayout = (BorderPane) loader.load();
-                    InformationController controller = loader.getController();
-                    controller.initNode(currentnode, currentnode_active_connections, currentnode_passive_connections);
+                //Fill stage with content
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(MainApp.class.getResource("view/information_window.fxml"));
+                infolayout = (BorderPane) loader.load();
+                InformationController controller = loader.getController();
+                controller.initNode(currentnode, currentnode_active_connections, currentnode_passive_connections);
 
-                    // Show the scene containing the root layout.
-                    Scene scene = new Scene(infolayout);
-                    stage.setScene(scene);
-                    stage.show();
+                // Show the scene containing the root layout.
+                Scene scene = new Scene(infolayout);
+                stage.setScene(scene);
+                stage.show();
 
-                }
-                catch (IOException z){
-                    z.printStackTrace();
-                }
+            } catch (IOException z) {
+                z.printStackTrace();
+            }
+        }
+        else {
+            NoSelectionInput alert = new NoSelectionInput(Alert.AlertType.WARNING);
+            alert.show();
+        }
     }
 
 

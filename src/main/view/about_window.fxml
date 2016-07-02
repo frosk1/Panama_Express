@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.paint.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.view.AboutController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background" stylesheets="@DarkTheme.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.view.AboutController">
    <children>
-      <Label layoutX="231.0" layoutY="14.0" prefHeight="30.0" prefWidth="140.0" text="The Paname Express" />
+      <Label layoutX="231.0" layoutY="14.0" prefHeight="30.0" prefWidth="161.0" styleClass="label-bright" text="The Paname Express" />
       <ImageView fx:id="logo" fitHeight="197.0" fitWidth="374.0" layoutX="184.0" layoutY="68.0" pickOnBounds="true" preserveRatio="true" />
-      <Label layoutX="153.0" layoutY="44.0" prefHeight="15.0" prefWidth="297.0" text="Your Search Engine for the Panama Papers" />
-      <Label layoutX="108.0" layoutY="349.0" prefHeight="15.0" prefWidth="374.0" text="The International Consortium of Investigative Journalists" />
-      <Label layoutX="179.0" layoutY="371.0" prefHeight="15.0" prefWidth="205.0" text="https://panamapapers.icij.org/" />
-      <Label layoutX="190.0" layoutY="277.0" prefHeight="15.0" prefWidth="205.0" text="Contribute to us at Bitbucket" />
-      <Label layoutX="130.0" layoutY="299.0" prefHeight="15.0" prefWidth="325.0" text="https://bitbucket.org/IMS_CREW/panama_express" />
+      <Label layoutX="153.0" layoutY="44.0" prefHeight="19.0" prefWidth="325.0" styleClass="label-bright" text="Your Search Engine for the Panama Papers" />
+      <Label layoutX="108.0" layoutY="349.0" prefHeight="19.0" prefWidth="427.0" styleClass="label-bright" text="The International Consortium of Investigative Journalists" />
+      <Label layoutX="179.0" layoutY="371.0" prefHeight="19.0" prefWidth="235.0" styleClass="label-bright" text="https://panamapapers.icij.org/" />
+      <Label layoutX="190.0" layoutY="277.0" prefHeight="19.0" prefWidth="227.0" styleClass="label-bright" text="Contribute to us at Bitbucket" />
+      <Label layoutX="130.0" layoutY="299.0" prefHeight="19.0" prefWidth="374.0" styleClass="label-bright" text="https://bitbucket.org/IMS_CREW/panama_express" />
+      <Label layoutX="8.0" layoutY="5.0" styleClass="label-bright" text="Version 1.21" />
    </children>
 </Pane>
